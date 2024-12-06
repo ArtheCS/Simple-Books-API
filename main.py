@@ -31,8 +31,10 @@ class AddBook(BaseModel):
     quantity:int
     availability:bool = True
 
+#book model for creating multiple books at same time
 class AddBooks(BaseModel):
     books: list[AddBook]
+#books model for updating books
 class UpdateBook(BaseModel):
     title: Optional[str] = None
     author: Optional[str] = None
@@ -41,7 +43,7 @@ class UpdateBook(BaseModel):
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
-
+#post request for creating new books
 @app.post("/books/", response_model=dict)
 def create_books(add_books: AddBooks):
     db = SessionLocal()
@@ -60,6 +62,8 @@ def create_books(add_books: AddBooks):
         db.close()
     return {"message": "Books added successfully", "book_ids": book_ids}
 
+#Get response for retrieving all books
+
 @app.get("/books", response_model=List[dict])
 def get_all_books():
     db = SessionLocal()
@@ -68,7 +72,7 @@ def get_all_books():
     if not books:
         raise HTTPException(status_code=404, detail="No books found")
     return [{"id": book.id, "title": book.title, "author": book.author , "quantity": book.quantity , "availability": book.availability} for book in books]
-    
+#Get book with id
 @app.get("/books/{book_id}", response_model=dict)
 def search_book(book_id: int):
     db = SessionLocal()
@@ -77,7 +81,7 @@ def search_book(book_id: int):
     if not db_book:
         raise HTTPException(status_code=404, detail="Book not found")
     return {"id": db_book.id, "title": db_book.title, "author": db_book.author , "quantity": db_book.quantity , "availability": db_book.availability}
-
+#update book details with id
 @app.put("/books/{book_id}", response_model=dict)
 def update_book(book_id: int, book: UpdateBook):
     db = SessionLocal()
@@ -97,7 +101,7 @@ def update_book(book_id: int, book: UpdateBook):
     db.refresh(db_book)
     db.close()
     return {"message": "Book updated successfully", "book_id": book_id}
-
+#delete single book with id
 @app.delete("/books/{book_id}", response_model=dict)
 def delete_book(book_id: int):
     db = SessionLocal()
@@ -109,7 +113,7 @@ def delete_book(book_id: int):
     db.commit()
     db.close()
     return {"detail": "book deleted successfully"}
-
+#delete multiple books with ids
 @app.delete("/books", response_model=dict)
 def delete_books(book_ids: List[int]):
     db = SessionLocal()
