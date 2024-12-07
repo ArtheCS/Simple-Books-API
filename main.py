@@ -10,7 +10,7 @@ from sqlalchemy.sql.sqltypes import Boolean
 app = FastAPI()
 
 # Database configuration (SQLite for local development)
-DATABASE_URL = "postgresql://arthecs:oUq5AMTHHbHJGOyhyjO3@booksdb.c5uo2eyg2y7i.ap-south-1.rds.amazonaws.com/booksdb" # use localdb address("sqlite:///./test.db") for using in local IDE 
+DATABASE_URL = "postgresql://arthecs:Greatgun_81@booksdb-1.c5uo2eyg2y7i.ap-south-1.rds.amazonaws.com:5432/booksdb" # use localdb address("sqlite:///./test.db") for using in local IDE 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
